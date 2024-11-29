@@ -1,0 +1,7 @@
+CREATE USER dzencode WITH PASSWORD 'dzencode';
+
+CREATE DATABASE dzencode;
+
+GRANT ALL PRIVILEGES ON DATABASE dzencode TO dzencode;
+
+ALTER USER dzencode CREATEDB;

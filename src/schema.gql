@@ -1,0 +1,102 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Auth {
+  token: String!
+}
+
+type Captcha {
+  data: String!
+  id: String!
+}
+
+type Comment {
+  createdAt: DateTime!
+  id: Int!
+  parent: Comment
+  parentId: Int
+  replies: [Comment!]
+  text: String!
+  user: User!
+  userId: Int!
+}
+
+input CreateCommentInput {
+  parentId: Int
+  text: String!
+  userId: Int!
+}
+
+input CreateUserInput {
+  email: String!
+  homepage: String
+  password: String!
+  username: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+input LoginInput {
+  captchaId: String!
+  email: String!
+  password: String!
+}
+
+type Mutation {
+  createComment(createCommentInput: CreateCommentInput!): Comment!
+  createUser(createUserInput: CreateUserInput!): User!
+  login(loginInput: LoginInput!): Auth!
+  singUp(signUpInput: SignUpInput!): Auth!
+  verifyCaptcha(verifyCaptchaInput: VerifyCaptchaInput!): Boolean!
+}
+
+type PaginationComments {
+  comments: [Comment!]!
+  currentPage: Int!
+  totalCount: Int!
+  totalPages: Int!
+}
+
+type Query {
+  generateCaptcha: Captcha!
+  replyComments(limit: Int = 25, page: Int = 1, parentId: Int!): PaginationComments!
+  topLevelComments(limit: Int = 25, page: Int = 1, sortBy: SortCommentFieldEnum, sortOrder: SortOrderEnum): PaginationComments!
+  user(id: Float!): User!
+  users: [User!]!
+}
+
+input SignUpInput {
+  captchaId: String!
+  email: String!
+  homepage: String
+  password: String!
+  username: String!
+}
+
+enum SortCommentFieldEnum {
+  createdAt
+  email
+  username
+}
+
+enum SortOrderEnum {
+  asc
+  desc
+}
+
+type User {
+  createdAt: DateTime!
+  email: String!
+  homepage: String
+  id: Int!
+  username: String!
+}
+
+input VerifyCaptchaInput {
+  id: String!
+  text: String!
+}
