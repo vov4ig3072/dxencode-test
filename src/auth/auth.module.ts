@@ -10,7 +10,7 @@ import { JwtStrategy } from './jwt.strategy'
 import { AuthService } from './services/auth.service'
 import { AuthResolver } from './auth.resolver'
 import { EventEmitterModule } from '@nestjs/event-emitter'
-import { IsCaptchaVerifiedConstraint } from '../common/decorators/is-captcha-verified-constraint.service'
+import { IsCaptchaVerifiedConstraint } from '../common/decorators/is-captcha-verified-constraint.decorator'
 import { UserService } from '../user/user.service'
 import { PasswordService } from './services/password.service'
 

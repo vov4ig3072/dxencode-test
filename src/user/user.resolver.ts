@@ -16,9 +16,4 @@ export class UserResolver {
   findOne(@Args('id', { type: () => Number }) id: number) {
     return this.usersService.findOne(id)
   }
-
-  @Mutation(() => User)
-  createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
-    return this.usersService.createUser(createUserInput)
-  }
 }

@@ -6,10 +6,15 @@ import {
   SortOrderEnum,
 } from '../common/enum/sortCommentFieldEnum'
 import { GetRepliesArgs } from './dto/get-replies.arg'
+import * as sanitizeHtml from 'sanitize-html'
+import { FileService } from '../file/file.service'
 
 @Injectable()
 export class CommentService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private fileService: FileService,
+  ) {}
 
   async findReplies({ page, limit, parentId }: GetRepliesArgs) {
     const offset = (page - 1) * limit
@@ -21,6 +26,7 @@ export class CommentService {
       include: {
         user: true,
         parent: { include: { user: true } },
+        file: true,
       },
     })
 
@@ -34,21 +40,48 @@ export class CommentService {
     }
   }
 
-  async createComment(data: CreateCommentInput) {
-    const { parentId } = data
+  async createComment(
+    data: CreateCommentInput,
+    imageFile: Express.Multer.File | undefined,
+    textFile: Express.Multer.File | undefined,
+  ) {
+    const { parentId, text, userId } = data
 
     if (parentId) {
-      const parent = await this.prisma.comment.findUniqueOrThrow({
+      await this.prisma.comment.findUniqueOrThrow({
         where: { id: parentId },
       })
     }
 
+    const { path, type } = textFile
+      ? await this.fileService.uploadTextFile(textFile)
+      : await this.fileService.uploadImage(imageFile)
+
+    const sanitizedText = sanitizeHtml(data.text, {
+      allowedTags: ['a', 'code', 'i', 'strong'],
+      allowedAttributes: {
+        a: ['href', 'title'],
+      },
+      enforceHtmlBoundary: true,
+    })
+
     return this.prisma.comment.create({
-      data,
+      data: {
+        parentId,
+        userId,
+        text: sanitizedText,
+        file: {
+          create: {
+            path,
+            type,
+          },
+        },
+      },
       include: {
         user: true,
         parent: { include: { user: true } },
         replies: true,
+        file: true,
       },
     })
   }
@@ -75,6 +108,7 @@ export class CommentService {
       take: limit,
       include: {
         user: true,
+        file: true,
       },
     })
 

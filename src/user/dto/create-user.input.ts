@@ -22,7 +22,13 @@ export class CreateUserInput {
 
   @Field()
   @IsNotEmpty()
-  @IsStrongPassword({ minLength: 6 })
+  @IsStrongPassword({
+    minLength: 6,
+    minLowercase: 0,
+    minNumbers: 1,
+    minSymbols: 0,
+    minUppercase: 1,
+  })
   password: string
 
   @Field({ nullable: true })

@@ -4,6 +4,7 @@ export interface IConfig {
   nest: INestConfig
   security: ISecurityConfig
   captcha: ICaptchaConfig
+  file: IFileConfig
 }
 
 export interface INestConfig {
@@ -22,4 +23,11 @@ export interface ICaptchaConfig {
   size: number
   noise: number
   background: string
+}
+
+export interface IFileConfig {
+  allowedFormats: Array<string>
+  uploadDir: string
+  maxWidthImage: number
+  maxHeightImage: number
 }

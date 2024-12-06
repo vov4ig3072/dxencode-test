@@ -1,5 +1,6 @@
 import { Algorithm } from '../enum/algorithm.enum'
 import { IConfig } from '../interfaces/config.interface'
+import * as path from 'node:path'
 
 const config: IConfig = {
   nest: {
@@ -16,6 +17,12 @@ const config: IConfig = {
     color: true,
     noise: 3,
     size: 2,
+  },
+  file: {
+    allowedFormats: ['image/jpeg', 'image/png', 'image/gif'],
+    uploadDir: path.join('..', '..', '..', 'assets'),
+    maxHeightImage: 240,
+    maxWidthImage: 320,
   },
 }
 

@@ -13,6 +13,7 @@ type Captcha {
 
 type Comment {
   createdAt: DateTime!
+  file: File
   id: Int!
   parent: Comment
   parentId: Int
@@ -23,22 +24,26 @@ type Comment {
 }
 
 input CreateCommentInput {
+  image: Upload
   parentId: Int
   text: String!
+  textFile: Upload
   userId: Int!
-}
-
-input CreateUserInput {
-  email: String!
-  homepage: String
-  password: String!
-  username: String!
 }
 
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+type File {
+  comment: Comment!
+  commentId: Int!
+  createdAt: DateTime!
+  id: Int!
+  path: String!
+  type: String!
+}
 
 input LoginInput {
   captchaId: String!
@@ -48,7 +53,6 @@ input LoginInput {
 
 type Mutation {
   createComment(createCommentInput: CreateCommentInput!): Comment!
-  createUser(createUserInput: CreateUserInput!): User!
   login(loginInput: LoginInput!): Auth!
   singUp(signUpInput: SignUpInput!): Auth!
   verifyCaptcha(verifyCaptchaInput: VerifyCaptchaInput!): Boolean!
@@ -87,6 +91,9 @@ enum SortOrderEnum {
   asc
   desc
 }
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
 
 type User {
   createdAt: DateTime!

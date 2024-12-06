@@ -31,5 +31,15 @@ model Comment {
   parentId     Int?
   parent       Comment?  @relation("CommentParent", fields: [parentId], references: [id])
   replies      Comment[] @relation("CommentParent")
+  file         File?
   createdAt    DateTime  @default(now())
+}
+
+model File {
+  id          Int       @id @default(autoincrement())
+  comment     Comment   @relation(fields: [commentId], references: [id])
+  commentId   Int       @unique
+  path        String
+  type        String
+  createdAt   DateTime  @default(now())
 }

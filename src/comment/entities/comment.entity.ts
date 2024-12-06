@@ -1,5 +1,6 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql'
 import { User } from '../../user/entities/user.entity'
+import { File } from '../../file/entities/file.entity'
 
 @ObjectType()
 export class Comment {
@@ -23,6 +24,9 @@ export class Comment {
 
   @Field(() => Int, { nullable: true })
   parentId?: number
+
+  @Field(() => File, { nullable: true })
+  file?: File
 
   @Field()
   createdAt: Date

@@ -1,6 +1,6 @@
 import { InputType, Field } from '@nestjs/graphql'
 import { IsEmail, IsNotEmpty } from 'class-validator'
-import { IsCaptchaVerified } from '../../common/decorators/is-captcha-verified-constraint.service'
+import { IsCaptchaVerified } from '../../common/decorators/is-captcha-verified-constraint.decorator'
 
 @InputType()
 export class LoginInput {
