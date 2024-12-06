@@ -7,7 +7,6 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard'
 import { UseGuards } from '@nestjs/common'
 import { GetRepliesArgs } from './dto/get-replies.arg'
 import { PaginationComments } from './entities/pagination.entity'
-import { GraphQLUpload, FileUpload } from 'graphql-upload-ts'
 import { UploadFileAdapter } from '../common/utils/upload-file.adapter'
 
 @Resolver(() => Comment)
@@ -33,14 +32,10 @@ export class CommentResolver {
     )
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Mutation(() => Comment)
   async createComment(
     @Args('createCommentInput') createCommentInput: CreateCommentInput,
-    // @Args({ name: 'image', type: () => GraphQLUpload, nullable: true })
-    // image?: FileUpload,
-    // @Args({ name: 'textFile', type: () => GraphQLUpload, nullable: true })
-    // textFile?: FileUpload,
   ) {
     const { image, textFile } = createCommentInput
     const imageBuffer = image
