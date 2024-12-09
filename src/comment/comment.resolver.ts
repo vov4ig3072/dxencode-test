@@ -8,28 +8,48 @@ import { UseGuards } from '@nestjs/common'
 import { GetRepliesArgs } from './dto/get-replies.arg'
 import { PaginationComments } from './entities/pagination.entity'
 import { UploadFileAdapter } from '../common/utils/upload-file.adapter'
+import { CacheService } from '../cache/cache.service'
 
 @Resolver(() => Comment)
 export class CommentResolver {
   constructor(
     private readonly commentsService: CommentService,
     private readonly fileAdapter: UploadFileAdapter,
+    private readonly cacheService: CacheService,
   ) {}
+
   @Query(() => PaginationComments, { name: 'replyComments' })
-  findReplies(@Args() args: GetRepliesArgs) {
-    return this.commentsService.findReplies(args)
+  async findReplies(@Args() args: GetRepliesArgs) {
+    const key = `replies-${args.parentId}:${JSON.stringify(args)}`
+    let replies = await this.cacheService.get(key)
+
+    if (!replies) {
+      replies = await this.commentsService.findReplies(args)
+
+      await this.cacheService.set(key, replies, 60 * 60)
+    }
+
+    return replies
   }
 
   @Query(() => PaginationComments, { name: 'topLevelComments' })
   async getTopLevelComments(@Args() args: GetCommentsArgs) {
+    const key = `comments:${JSON.stringify(args)}`
     const { page, limit, sortBy, sortOrder } = args
+    let comments = await this.cacheService.get(key)
 
-    return this.commentsService.getTopLevelComments(
-      page,
-      limit,
-      sortBy,
-      sortOrder,
-    )
+    if (!comments) {
+      comments = await this.commentsService.getTopLevelComments(
+        page,
+        limit,
+        sortBy,
+        sortOrder,
+      )
+
+      await this.cacheService.set(key, comments, 60 * 60)
+    }
+
+    return comments
   }
 
   @UseGuards(JwtAuthGuard)
@@ -37,7 +57,12 @@ export class CommentResolver {
   async createComment(
     @Args('createCommentInput') createCommentInput: CreateCommentInput,
   ) {
-    const { image, textFile } = createCommentInput
+    const { image, textFile, parentId } = createCommentInput
+
+    await this.cacheService.deleteMany(
+      parentId ? `replies-${parentId}` : 'comments',
+    )
+
     const imageBuffer = image
       ? await this.streamToBuffer((await image).createReadStream())
       : undefined

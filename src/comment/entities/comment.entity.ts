@@ -1,6 +1,7 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql'
 import { User } from '../../user/entities/user.entity'
 import { File } from '../../file/entities/file.entity'
+import { DateScalar } from '../../common/scalars/date.scalar'
 
 @ObjectType()
 export class Comment {

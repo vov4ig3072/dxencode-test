@@ -11,6 +11,7 @@ import { AuthModule } from './auth/auth.module'
 import { ConfigModule } from '@nestjs/config'
 import { CaptchaModule } from './captcha/captcha.module'
 import { FileModule } from './file/file.module'
+import { CacheModule } from './cache/cache.module'
 import config from './common/configuration/config'
 
 @Module({
@@ -34,6 +35,7 @@ import config from './common/configuration/config'
     }),
     CaptchaModule,
     FileModule,
+    CacheModule,
   ],
   controllers: [AppController],
   providers: [AppService],

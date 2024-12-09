@@ -42,22 +42,35 @@ export class CommentService {
 
   async createComment(
     data: CreateCommentInput,
-    imageFile: Express.Multer.File | undefined,
-    textFile: Express.Multer.File | undefined,
+    imageFile?: Express.Multer.File,
+    textFile?: Express.Multer.File,
   ) {
     const { parentId, text, userId } = data
+    let createFile: any
+    let parent: any
 
     if (parentId) {
       await this.prisma.comment.findUniqueOrThrow({
         where: { id: parentId },
       })
+
+      parent = { connect: { id: parentId } }
     }
 
-    const { path, type } = textFile
-      ? await this.fileService.uploadTextFile(textFile)
-      : await this.fileService.uploadImage(imageFile)
+    if (textFile || imageFile) {
+      const { path, type } = textFile
+        ? await this.fileService.uploadTextFile(textFile)
+        : await this.fileService.uploadImage(imageFile)
 
-    const sanitizedText = sanitizeHtml(data.text, {
+      createFile = {
+        create: {
+          path,
+          type,
+        },
+      }
+    }
+
+    const sanitizedText = sanitizeHtml(text, {
       allowedTags: ['a', 'code', 'i', 'strong'],
       allowedAttributes: {
         a: ['href', 'title'],
@@ -67,15 +80,10 @@ export class CommentService {
 
     return this.prisma.comment.create({
       data: {
-        parentId,
-        userId,
+        parent,
         text: sanitizedText,
-        file: {
-          create: {
-            path,
-            type,
-          },
-        },
+        file: createFile,
+        user: { connect: { id: userId } },
       },
       include: {
         user: true,

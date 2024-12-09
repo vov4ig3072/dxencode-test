@@ -12,7 +12,7 @@ type Captcha {
 }
 
 type Comment {
-  createdAt: DateTime!
+  createdAt: Date!
   file: File
   id: Int!
   parent: Comment
@@ -31,15 +31,13 @@ input CreateCommentInput {
   userId: Int!
 }
 
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
+"""Date custom scalar type"""
+scalar Date
 
 type File {
   comment: Comment!
   commentId: Int!
-  createdAt: DateTime!
+  createdAt: Date!
   id: Int!
   path: String!
   type: String!
@@ -96,7 +94,7 @@ enum SortOrderEnum {
 scalar Upload
 
 type User {
-  createdAt: DateTime!
+  createdAt: Date!
   email: String!
   homepage: String
   id: Int!

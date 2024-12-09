@@ -10,9 +10,6 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   const configService = app.get(ConfigService)
 
-  useContainer(app.select(AppModule), { fallbackOnErrors: true })
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }))
-
   app.use(
     graphqlUploadExpress({
       maxFileSize: 2 * 1024 * 1024,
@@ -20,6 +17,9 @@ async function bootstrap() {
       overrideSendResponse: false,
     }),
   )
+
+  useContainer(app.select(AppModule), { fallbackOnErrors: true })
+  app.useGlobalPipes(new ValidationPipe())
 
   await app.listen(
     configService.get<INestConfig>('nest').port ?? process.env.PORT ?? 3000,

@@ -24,6 +24,7 @@ const config: IConfig = {
     maxHeightImage: 240,
     maxWidthImage: 320,
   },
+  redis: { url: 'redis://localhost:6379' },
 }
 
 export default (): IConfig => config

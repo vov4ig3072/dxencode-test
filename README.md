@@ -6,15 +6,30 @@ Start application with docker
 ```bash
 $ docker-compose up --build
 ```
-http://localhost:3000/graphql
-
-Graphql schema you can find src/schema.gql
 
 ## Run the project 
 ```bash
 $ npm install
 ```
+http://localhost:3000/graphql
 
+Graphql schema you can find src/schema.gql
+
+### Postman send file request
+Request POST 
+
+headers: { Content-Type: multipart/form-data }
+ <pre> 
+body: {  
+    operations: 
+      '{"query":"mutation CreateComment($file: Upload!) 
+      { createComment(createCommentInput: { parentId?: number, userId: number, 
+      text: string, image?: $file || textFile?: $file }) { id, text, userId,  
+      createdAt } }","variables":{"file":null}}',  
+    map: '{"0":["variables.file"]}',  
+    0: $file
+}
+</pre> 
 ## Compile and run the project
 
 ```bash

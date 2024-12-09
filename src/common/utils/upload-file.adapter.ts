@@ -13,6 +13,7 @@ export class UploadFileAdapter {
     if (!file) {
       return undefined
     }
+
     const filePath = this.configService.get<IFileConfig>('file').uploadDir
     const tempFilePath = path.join(__dirname, '..', filePath, file.filename)
 

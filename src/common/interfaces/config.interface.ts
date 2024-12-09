@@ -5,6 +5,7 @@ export interface IConfig {
   security: ISecurityConfig
   captcha: ICaptchaConfig
   file: IFileConfig
+  redis: IRedisConfig
 }
 
 export interface INestConfig {
@@ -30,4 +31,8 @@ export interface IFileConfig {
   uploadDir: string
   maxWidthImage: number
   maxHeightImage: number
+}
+
+export interface IRedisConfig {
+  url: string
 }

@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@apollo/server": "^4.11.2",
+    "@nestjs-modules/ioredis": "^2.0.2",
     "@nestjs/apollo": "^12.2.1",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.3.0",
@@ -38,6 +39,7 @@
     "graphql-upload": "^17.0.0",
     "graphql-upload-ts": "^2.1.2",
     "html-validator": "^6.0.1",
+    "ioredis": "^5.4.1",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.2.0",
